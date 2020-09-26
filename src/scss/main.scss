@@ -1,0 +1,144 @@
+@import './reset.scss';
+
+// variables
+$color-main: #2e5ae6;
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  color: #666;
+  background: #fff;
+}
+input,
+select,
+option {
+  color: #666;
+}
+input[type="text"],
+input[type="time"],
+select {
+  padding: 0 10px;
+  border: none;
+  background: #efefef;
+  height: 40px;
+  border-radius: 3px;
+}
+button {
+  outline: none;
+  border: 2px solid $color-main;
+  background: $color-main;
+  color: #fff;
+  border-radius: 3px; 
+  padding: 10px 40px;
+  cursor: pointer;
+  transition-duration: .3s;
+
+  &:hover {
+    background: #fff;
+    color: $color-main;
+  }
+}
+
+h1 {
+  text-align: center;
+  padding: 40px 0;
+  color: #2e5ae6;
+  // color: #6e4226;
+}
+
+.task-logs {
+  background: #fff;
+  padding: 0 10px;
+  max-width: 900px;
+  margin: 0 auto;
+
+  &__control-btns {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+  &__control-btn {
+    margin-left: 10px;
+  }
+  &__main-container {
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(#000, .1);
+  }
+  &__date {
+    margin-bottom: 15px;
+  }
+  &__list {
+    margin-bottom: 15px;
+  }
+  &__item {
+    padding-bottom: 5px;
+  }
+  &__table {
+    margin-bottom: 15px;
+  }
+  &__btn {
+    &--record {
+      margin-top: 15px;
+    }
+  }
+}
+.add-logs {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+
+  input, select {
+    margin: 0 5px;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+.costs {
+  margin-top: 30px;
+  &__title {
+    color: $color-main;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+}
+.day-cost {
+  width: 100%;
+  overflow-x: scroll;
+  padding-bottom: 20px;
+  
+  &__date {
+    color: $color-main;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  &__list {
+    display: flex;
+    padding: 0 5px;
+    margin-top: 30px;
+
+  }
+  &__item {
+    min-width: 140px;
+    margin-right: 20px;
+    box-shadow: 0 0 10px rgba(#000, .1);
+    padding: 10px;
+  }
+}
+
+// Scroll Bar
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+border-radius: 3px;
+box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
+}
+
+::-webkit-scrollbar-thumb {
+background-color: rgba($color-main, 0.3);
+border-radius: 3px;
+box-shadow:0 0 0 1px rgba(255, 255, 255, .3);
+}
