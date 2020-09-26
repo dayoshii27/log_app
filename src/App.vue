@@ -8,7 +8,9 @@
       <button @click="deleteData" class="task-logs__control-btn">Delete</button>
     </div>
     <div class="task-logs__main-container">
-      <h2 class="task-logs__date">{{ date }}</h2>
+      <h2 class="task-logs__date">
+        <input type="date" name="" id="" v-model="date" />
+      </h2>
       <form @submit.prevent="addLog" class="add-logs">
         <input
           type="time"
@@ -127,7 +129,7 @@ export default {
   name: "App",
   data: () => {
     return {
-      date: moment().format("【MM/DD】"),
+      date: moment().format("YYYY-MM-DD"),
       dayCosts: [],
       logs: [],
       inputStartTime: "",
@@ -197,7 +199,7 @@ export default {
     },
     recordDayCost() {
       this.dayCosts.push({
-        date: moment().format("M/D"),
+        date: moment(this.date).format("YYYY/MM/DD"),
         costs: this.costs,
         logs: this.logs
       });

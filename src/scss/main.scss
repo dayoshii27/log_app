@@ -142,3 +142,8 @@ background-color: rgba($color-main, 0.3);
 border-radius: 3px;
 box-shadow:0 0 0 1px rgba(255, 255, 255, .3);
 }
+
+// destyle
+input[type="date"] {
+  border: none;
+}
