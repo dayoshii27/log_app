@@ -6,6 +6,8 @@
         Read
       </button>
       <button @click="deleteData" class="task-logs__control-btn">Delete</button>
+      <button @click="exportData" class="task-logs__control-btn">Export</button>
+      <button @click="importData" class="task-logs__control-btn">Import</button>
     </div>
     <div class="task-logs__main-container">
       <h2 class="task-logs__date">
@@ -125,6 +127,7 @@
 <script>
 import moment from "moment";
 import projects from "./projects";
+
 export default {
   name: "App",
   data: () => {
@@ -239,6 +242,24 @@ export default {
     deleteData() {
       if (window.confirm("本当にデータを削除しますか？")) {
         localStorage.removeItem("data");
+      }
+    },
+    exportData() {
+      const blob = new Blob([JSON.stringify(this.dayCosts)]);
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = `${moment().format("YYYYMMDDhhmmss")}.json`;
+      link.click();
+      URL.revokeObjectURL(downloadUrl);
+    },
+    async importData() {
+      if (
+        window.confirm("ローカルのjsonからログデータをインポートしますか？")
+      ) {
+        const data = await fetch("./json/dayCosts.json");
+        const json = await data.json();
+        this.dayCosts = json;
       }
     }
   }
