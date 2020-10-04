@@ -1,5 +1,6 @@
 <template>
   <section class="task-logs">
+    <h1>log app</h1>
     <div class="task-logs__control-btns">
       <button @click="saveData" class="task-logs__control-btn">Save</button>
       <button @click="fetchDataDispatch" class="task-logs__control-btn">
@@ -87,6 +88,7 @@
             v-for="dayCost in dayCosts"
             :key="dayCost.date"
             class="day-cost__item"
+            @click="showDetail(dayCost.date)"
           >
             <h3 class="day-cost__date">{{ dayCost.date }}</h3>
             <ul>
@@ -98,11 +100,11 @@
         </ul>
       </div>
     </div>
-    <ul class="log-record">
-      <li v-for="(dayCost, index) in dayCosts" :key="index">
-        <h2>{{ dayCost.date }}</h2>
-        <table class="task-logs__table">
-          <tr v-for="(log, index) in dayCost.logs" :key="index">
+    <teleport to="#modal">
+      <div v-if="detailLogKey" class="log-record">
+        <h2>{{ detailLog.date }}</h2>
+        <table class="log-record__table">
+          <tr v-for="(log, index) in detailLog.logs" :key="index">
             <td>{{ log.inputStartTimeHour }}</td>
             <td>時</td>
             <td>{{ log.inputStartTimeMinutes }}</td>
@@ -120,13 +122,14 @@
             </td>
           </tr>
         </table>
-      </li>
-    </ul>
+      </div>
+    </teleport>
   </section>
 </template>
 <script>
 import moment from "moment";
 import projects from "./projects";
+import addListenerCloseModal from "./modules/addListenerCloseModal";
 
 export default {
   name: "App",
@@ -139,7 +142,8 @@ export default {
       inputEndTime: "",
       inputProjectCode: "",
       inputDescription: "",
-      projects: projects
+      projects: projects,
+      detailLogKey: ""
     };
   },
   computed: {
@@ -173,10 +177,18 @@ export default {
         });
       });
       return costs.filter(item => item.hour !== 0);
+    },
+    detailLog() {
+      return this.dayCosts.find(dayCost => dayCost.date === this.detailLogKey);
     }
   },
   created() {
     this.fetchDataInitial();
+  },
+  mounted() {
+    this.$nextTick(() => {
+      addListenerCloseModal();
+    });
   },
   methods: {
     addLog() {
@@ -209,6 +221,11 @@ export default {
       this.costs = [];
       this.logs = [];
       this.inputStartTime = "";
+    },
+    showDetail(date) {
+      this.detailLogKey = date;
+      const body = document.querySelector("body");
+      body.classList.add("modal_opened");
     },
     saveData() {
       if (window.confirm("データを保存しますか？")) {
