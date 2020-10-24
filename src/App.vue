@@ -1,96 +1,95 @@
 <template>
-  <section class="task-logs">
+  <section class="app-container">
     <h1>log app</h1>
-    <div class="task-logs__control-btns">
-      <button @click="saveData" class="task-logs__control-btn">Save</button>
-      <button @click="fetchDataDispatch" class="task-logs__control-btn">
+    <div class="controller">
+      <button @click="saveData" class="controller__btn">Save</button>
+      <button @click="fetchDataDispatch" class="controller__btn">
         Read
       </button>
-      <button @click="deleteData" class="task-logs__control-btn">Delete</button>
-      <button @click="exportData" class="task-logs__control-btn">Export</button>
-      <button @click="importData" class="task-logs__control-btn">Import</button>
+      <button @click="deleteData" class="controller__btn">Delete</button>
+      <button @click="exportData" class="controller__btn">Export</button>
+      <button @click="importData" class="controller__btn">Import</button>
     </div>
-    <div class="task-logs__main-container">
-      <h2 class="task-logs__date">
-        <input type="date" name="" id="" v-model="date" />
-      </h2>
-      <form @submit.prevent="addLog" class="add-logs">
-        <input
-          type="time"
-          v-model="inputStartTime"
-          class="add-logs__start-time"
-        />
-        ~
-        <input type="time" v-model="inputEndTime" class="add-logs__end-time" />
-        <select
-          name="project-code"
-          v-model="inputProjectCode"
-          class="add-logs__project-code"
-        >
-          <option
-            v-for="project in projects"
-            :key="project.code"
-            :value="project.code"
-            >{{ project.name }}</option
-          >
-        </select>
-        <input
-          type="text"
-          v-model="inputDescription"
-          class="add-logs__task-description"
-        />
-      </form>
-      <!-- <ul class="task-logs__list">
-        <li v-for="(log, index) in logs" :key="index" class="task-logs__item">
-          <span class="task-logs__start-time">{{ log.inputStartTime }}</span>〜
-          <span class="task-logs__end-time">{{ log.inputEndTime }}</span>
-          <span class="task-logs__elapsed-time">（{{ log.duration }}）</span>
-          <span class="task-logs__project-code">{{ log.inputProjectCode }}</span>
-          <span class="task-logs__task-description">{{ log.inputDescription }}</span>
-        </li>
-      </ul> -->
-      <table class="task-logs__table">
-        <tr v-for="(log, index) in logs" :key="index">
-          <td>{{ log.inputStartTimeHour }}</td>
-          <td>時</td>
-          <td>{{ log.inputStartTimeMinutes }}</td>
-          <td>分</td>
-          <td></td>
-          <td>〜</td>
-          <td>{{ log.inputEndTimeHour }}</td>
-          <td>時</td>
-          <td>{{ log.inputEndTimeMinutes }}</td>
-          <td>分</td>
-          <td></td>
-          <td>
-            <span v-if="log.projectName">【{{ log.projectName }}】</span
-            >{{ log.inputDescription }}
-          </td>
-        </tr>
-      </table>
+    <div class="main-container">
+      <div class="daily-record">
+        <h2 class="daily-record__date">
+          <input type="date" name="" id="" v-model="date" />
+        </h2>
+        <form @submit.prevent="addLog" class="daily-record__form">
+          <input
+            type="time"
+            data-input-name="start-time"
+            v-model="inputStartTime"
+          />
+          ~
+          <input
+            type="time"
+            data-input-name="end-time"
+            v-model="inputEndTime"
+          />
+          <select name="project-code" v-model="inputProjectCode">
+            <option
+              v-for="project in projects"
+              :key="project.code"
+              :value="project.code"
+              >{{ project.name }}</option
+            >
+          </select>
+          <input
+            type="text"
+            v-model="inputDescription"
+            class="add-logs__task-description"
+          />
+        </form>
+        <table class="daily-record__table">
+          <tr v-for="(log, index) in logs" :key="index">
+            <td>{{ log.inputStartTimeHour }}</td>
+            <td>時</td>
+            <td>{{ log.inputStartTimeMinutes }}</td>
+            <td>分</td>
+            <td></td>
+            <td>〜</td>
+            <td>{{ log.inputEndTimeHour }}</td>
+            <td>時</td>
+            <td>{{ log.inputEndTimeMinutes }}</td>
+            <td>分</td>
+            <td></td>
+            <td>
+              <span v-if="log.projectName">【{{ log.projectName }}】</span
+              >{{ log.inputDescription }}
+            </td>
+          </tr>
+        </table>
 
-      <div v-if="costs.length > 0" class="costs">
-        <p class="costs__title">Cost per projects</p>
-        <ul class="costs__list">
-          <li v-for="item in costs" :key="item.code" class="costs__item">
-            <span class="costs__project-code">{{ item.code }}</span>
-            :
-            <span class="costs__costs">{{ item.hour }}</span>
-          </li>
-        </ul>
+        <div v-if="costs.length > 0" class="daily-record__man-hour">
+          <p class="daily-record__man-hour-title">Cost per projects</p>
+          <ul class="daily-record__man-hour-list">
+            <li
+              v-for="item in costs"
+              :key="item.code"
+              class="daily-record__man-hour-item"
+            >
+              <span class="daily-record__man-hour-project-code">{{
+                item.code
+              }}</span>
+              :
+              <span class="daily-record__man-hour-costs">{{ item.hour }}</span>
+            </li>
+          </ul>
+        </div>
+        <button @click="recordDayCost" class="daily-record__btn">
+          Record
+        </button>
       </div>
-      <button @click="recordDayCost" class="task-logs__btn--record">
-        Record
-      </button>
-      <div v-if="dayCosts.length > 0" class="day-cost">
-        <ul class="day-cost__list">
+      <div v-if="dayCosts.length > 0" class="monthly-mon-hour">
+        <ul class="monthly-mon-hour__list">
           <li
             v-for="dayCost in dayCosts"
             :key="dayCost.date"
-            class="day-cost__item"
+            class="monthly-mon-hour__item"
             @click="showDetail(dayCost.date)"
           >
-            <h3 class="day-cost__date">{{ dayCost.date }}</h3>
+            <h3 class="monthly-mon-hour__date">{{ dayCost.date }}</h3>
             <ul>
               <li v-for="cost in dayCost.costs" :key="cost.code">
                 {{ cost.code }}：{{ cost.hour }}
@@ -102,7 +101,7 @@
     </div>
     <teleport to="#modal">
       <div v-if="detailLogKey" class="log-record">
-        <h2>{{ detailLog.date }}</h2>
+        <h2 class="log-record__date">{{ detailLog.date }}</h2>
         <table class="log-record__table">
           <tr v-for="(log, index) in detailLog.logs" :key="index">
             <td>{{ log.inputStartTimeHour }}</td>
@@ -210,7 +209,7 @@ export default {
       this.inputEndTime = "";
       this.inputProjectCode = "";
       this.inputDescription = "";
-      document.querySelector(".add-logs__end-time").focus();
+      document.querySelector('[data-input-name="end-time"]').focus();
     },
     recordDayCost() {
       this.dayCosts.push({
