@@ -100,27 +100,29 @@
       </div>
     </div>
     <teleport to="#modal">
-      <div v-if="detailLogKey" class="log-record">
-        <h2 class="log-record__date">{{ detailLog.date }}</h2>
-        <table class="log-record__table">
-          <tr v-for="(log, index) in detailLog.logs" :key="index">
-            <td>{{ log.inputStartTimeHour }}</td>
-            <td>時</td>
-            <td>{{ log.inputStartTimeMinutes }}</td>
-            <td>分</td>
-            <td></td>
-            <td>〜</td>
-            <td>{{ log.inputEndTimeHour }}</td>
-            <td>時</td>
-            <td>{{ log.inputEndTimeMinutes }}</td>
-            <td>分</td>
-            <td></td>
-            <td>
-              <span v-if="log.projectName">【{{ log.projectName }}】</span
-              >{{ log.inputDescription }}
-            </td>
-          </tr>
-        </table>
+      <div class="modal__inner" @click="hideDetail">
+        <div v-if="detailLogKey" class="log-record" @click.stop>
+          <h2 class="log-record__date">{{ detailLog.date }}</h2>
+          <table class="log-record__table">
+            <tr v-for="(log, index) in detailLog.logs" :key="index">
+              <td>{{ log.inputStartTimeHour }}</td>
+              <td>時</td>
+              <td>{{ log.inputStartTimeMinutes }}</td>
+              <td>分</td>
+              <td></td>
+              <td>〜</td>
+              <td>{{ log.inputEndTimeHour }}</td>
+              <td>時</td>
+              <td>{{ log.inputEndTimeMinutes }}</td>
+              <td>分</td>
+              <td></td>
+              <td>
+                <span v-if="log.projectName">【{{ log.projectName }}】</span
+                >{{ log.inputDescription }}
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
     </teleport>
   </section>
@@ -128,7 +130,6 @@
 <script>
 import moment from "moment";
 import projects from "./projects";
-import addListenerCloseModal from "./modules/addListenerCloseModal";
 
 export default {
   name: "App",
@@ -184,11 +185,6 @@ export default {
   created() {
     this.fetchDataInitial();
   },
-  mounted() {
-    this.$nextTick(() => {
-      addListenerCloseModal();
-    });
-  },
   methods: {
     addLog() {
       this.logs.push({
@@ -225,6 +221,10 @@ export default {
       this.detailLogKey = date;
       const body = document.querySelector("body");
       body.classList.add("modal_opened");
+    },
+    hideDetail() {
+      const body = document.querySelector("body");
+      body.classList.remove("modal_opened");
     },
     saveData() {
       if (window.confirm("データを保存しますか？")) {
