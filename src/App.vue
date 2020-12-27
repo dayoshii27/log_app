@@ -97,6 +97,9 @@
             </ul>
           </li>
         </ul>
+      </div>
+      <div class="monthly-total">
+        <h2 class="monthly-total__title">月工数合計</h2>
         <ul class="monthly-mon-hour__sum-list">
           <li
             v-for="project in monthCostsSum"
