@@ -144,6 +144,16 @@ border-radius: 3px;
 box-shadow:0 0 0 1px rgba(255, 255, 255, .3);
 }
 
+.monthly-total {
+  margin-top: 30px;
+
+  &__title {
+    color: $color-main;
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+}
+
 // modal
 main {
   .modal_opened & {
