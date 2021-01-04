@@ -45,28 +45,29 @@
   </teleport>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, inject, reactive, computed } from "vue";
 import { key } from "../stores/Store";
+import { Store } from "../types/index";
 
 export default defineComponent({
   setup() {
-    const store = inject(key);
+    const store: Store | undefined = inject(key);
     const data = reactive({
       detailLogKey: ""
     });
     const detailLog = computed(() => {
-      return store.state.dayCosts.find(
+      return store?.state.dayCosts.find(
         dayCost => dayCost.date === data.detailLogKey
       );
     });
     const body = document.querySelector("body");
-    const showDetail = date => {
+    const showDetail = (date: string) => {
       data.detailLogKey = date;
-      body.classList.add("modal_opened");
+      body?.classList.add("modal_opened");
     };
     const hideDetail = () => {
-      body.classList.remove("modal_opened");
+      body?.classList.remove("modal_opened");
     };
 
     return {

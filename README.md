@@ -1,4 +1,4 @@
-# log_app
+# ts-log-app
 
 ## Project setup
 ```

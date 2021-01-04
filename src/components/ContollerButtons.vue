@@ -8,28 +8,32 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, inject } from "vue";
 import { key } from "../stores/Store";
 import moment from "moment";
+import { Store, Log, DayCost } from "../types/index";
+
 export default defineComponent({
   setup() {
-    const store = inject(key);
+    const store: Store | undefined = inject(key);
     const saveData = () => {
       if (window.confirm("データを保存しますか？")) {
         localStorage.setItem(
           "data",
           JSON.stringify({
-            logs: store.state.logs,
-            dayCosts: store.state.dayCosts
+            logs: store?.state.logs,
+            dayCosts: store?.state.dayCosts
           })
         );
       }
     };
     const featchData = () => {
-      const fetchedData = JSON.parse(localStorage.getItem("data"));
-      store.overwriteLogs(fetchedData.logs);
-      store.overwriteDayCosts(fetchedData.dayCosts);
+      const fetchedData = localStorage.getItem("data");
+      const parsedData: { logs: Log[]; dayCosts: DayCost[] } =
+        fetchedData !== null ? JSON.parse(fetchedData) : [];
+      store?.overwriteLogs(parsedData.logs);
+      store?.overwriteDayCosts(parsedData.dayCosts);
     };
     const fetchDataInitial = () => {
       if (localStorage.getItem("data")) {
@@ -51,7 +55,7 @@ export default defineComponent({
       }
     };
     const exportData = () => {
-      const blob = new Blob([JSON.stringify(store.state.dayCosts)]);
+      const blob = new Blob([JSON.stringify(store?.state.dayCosts)]);
       const downloadUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = downloadUrl;
@@ -64,8 +68,8 @@ export default defineComponent({
         window.confirm("ローカルのjsonからログデータをインポートしますか？")
       ) {
         const data = await fetch("./json/dayCosts.json");
-        const json = await data.json();
-        store.overwriteDayCosts(json);
+        const json: DayCost[] = await data.json();
+        store?.overwriteDayCosts(json);
       }
     };
 
