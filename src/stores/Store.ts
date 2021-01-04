@@ -1,13 +1,16 @@
 import { reactive, computed, readonly } from "vue";
 import projects from "../projects";
-const state = reactive({
+
+import { Log, State, DayCost, Costs } from "../types/index";
+
+const state: State = reactive({
   projects,
   logs: [],
   dayCosts: []
 });
 
 const costs = computed(() => {
-  const costs = [];
+  const costs: Costs = [];
   state.projects.forEach(project => {
     costs.push({
       code: project.code,
@@ -24,20 +27,20 @@ const costs = computed(() => {
   return costs.filter(item => item.hour !== 0);
 });
 
-const pushLog = data => {
+const pushLog = (data: Log): void => {
   state.logs.push(data);
 };
 const resetLogs = () => {
   state.logs = [];
 };
-const overwriteLogs = data => {
+const overwriteLogs = (data: Log[]): void => {
   state.logs = data;
 };
 
-const recordDayCost = dayCost => {
+const recordDayCost = (dayCost: DayCost): void => {
   state.dayCosts.push(dayCost);
 };
-const overwriteDayCosts = data => {
+const overwriteDayCosts = (data: DayCost[]) => {
   state.dayCosts = data;
 };
 

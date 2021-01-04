@@ -71,13 +71,15 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import moment from "moment";
 import { reactive, defineComponent, computed, inject } from "vue";
 import { key } from "../stores/Store";
+import { Store } from "../types/index";
+
 export default defineComponent({
   setup() {
-    const store = inject(key);
+    const store: Store | undefined = inject(key);
     const data = reactive({
       date: moment().format("YYYY-MM-DD"),
       inputStartTime: "",
@@ -92,7 +94,7 @@ export default defineComponent({
     });
     const projectName = computed(() => {
       let projectName = null;
-      store.state.projects.forEach(project => {
+      store?.state.projects.forEach(project => {
         if (project.code === data.inputProjectCode) {
           projectName = project.name;
         }
@@ -100,7 +102,7 @@ export default defineComponent({
       return projectName;
     });
     const addLog = () => {
-      store.pushLog({
+      store?.pushLog({
         inputStartTime: data.inputStartTime,
         inputStartTimeHour: moment(data.inputStartTime, "HH:mm").format("HH"),
         inputStartTimeMinutes: moment(data.inputStartTime, "HH:mm").format(
@@ -118,15 +120,18 @@ export default defineComponent({
       data.inputEndTime = "";
       data.inputProjectCode = "";
       data.inputDescription = "";
-      document.querySelector('[data-input-name="end-time"]').focus();
+      const endTimeElement: HTMLInputElement | null = document.querySelector(
+        '[data-input-name="end-time"]'
+      );
+      endTimeElement?.focus();
     };
     const recordDayCost = () => {
-      store.recordDayCost({
+      store?.recordDayCost({
         date: moment(data.date).format("YYYY/MM/DD"),
         costs: store.costs.value,
         logs: store.state.logs
       });
-      store.resetLogs();
+      store?.resetLogs();
       data.inputStartTime = "";
     };
 
@@ -139,5 +144,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style></style>

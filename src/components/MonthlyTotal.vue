@@ -13,24 +13,25 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, inject, computed } from "vue";
 import { key } from "../stores/Store";
+import { Store } from "../types/index";
 
 export default defineComponent({
   setup() {
-    const store = inject(key);
+    const store: Store | undefined = inject(key);
     const monthCostsSum = computed(() => {
-      const existingProjects = store.state.projects.filter(project =>
+      const existingProjects = store?.state.projects.filter(project =>
         store.state.dayCosts.some(dayCost =>
           dayCost.costs.some(cost => cost.code === project.code)
         )
       );
-      return existingProjects.map(project => {
+      return existingProjects?.map(project => {
         return {
           code: project.code,
           name: project.name,
-          sum: store.state.dayCosts.reduce((sum, dayCost) => {
+          sum: store?.state.dayCosts.reduce((sum, dayCost) => {
             const add =
               dayCost.costs.find(cost => cost.code === project.code)?.hour || 0;
             return sum + add;
