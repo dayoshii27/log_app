@@ -6,6 +6,7 @@
         v-for="project in monthCostsSum"
         :key="project.code"
         class="monthly-mon-hour__sum-item"
+        @click="showProjectDetail(project.code)"
       >
         {{ `${project.code}：${project.sum}（${project.name}）` }}
       </li>
@@ -40,8 +41,27 @@ export default defineComponent({
       });
     });
 
+    const showProjectDetail = (projectCode: string) => {
+      const projects = store?.state.dayCosts.map(dayCost => {
+        const projectDayCost = dayCost.logs.find(log => log.inputProjectCode === projectCode);
+        return {
+          duration: projectDayCost?.duration,
+          desc: projectDayCost?.inputDescription,
+          date: dayCost.date
+        }
+      });
+      const filteredProject = projects?.filter(project => !!project.duration);
+      const filteredProjectDetail = filteredProject?.map(project => ({
+        desc: project?.desc,
+        cost: project?.duration,
+        date: project?.date
+      }));
+      console.log('filteredProjectDetail', filteredProjectDetail);
+    }
+
     return {
-      monthCostsSum
+      monthCostsSum,
+      showProjectDetail
     };
   }
 });
